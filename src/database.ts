@@ -1,6 +1,6 @@
-import { knex as setupKnex, Knex } from "knex";
+import knex from "knex";
 
-export const config: Knex.Config = {
+export const config = {
   client: "sqlite3",
   connection: {
     //fazendo a conexao com o banco de dados sqlite localizado na pasta tmp
@@ -8,12 +8,12 @@ export const config: Knex.Config = {
   },
   useNullAsDefault: true,
   migrations: {
-    extension: 'ts',
-    directory: './db/migrations'
-  }
+    extension: "ts",
+    directory: "./db/migrations",
+  },
 };
 
-export const knex = setupKnex(config);
+export const database = knex(config);
 
 //usando o query builder que no caso é o knex
 // com ele podemos fazer consultas mais complexas no banco de dados de forma mais simples
