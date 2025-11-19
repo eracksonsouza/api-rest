@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import { database } from "./database.js";
 import crypto from "node:crypto";
-import { title } from "node:process";
+import { env } from "./env/index.js";
 
 const app = fastify();
 
@@ -24,7 +24,7 @@ app.get("/hello", async () => {
 
 app
   .listen({
-    port: 3333,
+    port: env.PORT,
   })
   .then(() => {
     console.log("Server rodandoo");
