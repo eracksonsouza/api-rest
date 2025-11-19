@@ -1,10 +1,12 @@
 import fastify from "fastify";
+import { database } from "./database.js";
 
 const app = fastify();
 
-//GET, POST, PUT, PATCH, DELETE
-app.get("/hello", () => {
-  return "Hello Node";
+app.get("/hello", async () => {
+  const tables = await database("sqlite_schema").select("*");
+
+  return tables;
 });
 
 app
@@ -14,6 +16,3 @@ app
   .then(() => {
     console.log("Server rodandoo");
   });
-
-//o tsx so eh recomendado utilizar em desenvolvimento
-//Ja o tsc para build
