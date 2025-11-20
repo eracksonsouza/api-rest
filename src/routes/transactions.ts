@@ -3,40 +3,81 @@ import { z } from "zod";
 import { database } from "../database.js";
 import { title } from "process";
 import { randomUUID } from "crypto";
+import { error } from "console";
+import { checkSessionIdExists } from "../middlewares/check-session-id-exists.js";
 
 //Cookies : Formas da gente manter contexto entre requisiçoes (saber se o mesmo usuario que ta cadastrando eh o mesmo que ta lendo)
 // Sao como parametros (mas sao criados pelas nossas proprias aplicacoes)
 //otimo pra indentificar usuarios
 
 export async function transactionRoutes(app: FastifyInstance) {
-  app.get("/", async () => {
-    const transactions = await database("transactions").select();
+  /*
+  aqui eh um exemplo de hook global (middleware global) que vai ser executado em todas as rotas, mas uma das desvantagens eh que nao conseguimos controlar em quais rotas ele sera executado (apenas nas locais onde for definido o hook)
+  app.addHook('preHandler', async (request, reply) => {
+    console.log(`${request.method} - ${request.url}`);
+    
+  })
+    */
+  app.get(
+    "/",
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request, reply) => {
+      const { sessionId } = request.cookies;
 
-    return { transactions };
-  });
+      const transactions = await database("transactions")
+        .where("session_id", sessionId)
+        .select();
 
-  app.get("/:id", async (request) => {
-    const getTransactionParamsSchema = z.object({
-      id: z.string().uuid(),
-    });
+      return { transactions };
+    }
+  );
 
-    const { id } = getTransactionParamsSchema.parse(request.params);
+  app.get(
+    "/:id",
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request) => {
+      const getTransactionParamsSchema = z.object({
+        id: z.string().uuid(),
+      });
 
-    const transaction = await database("transactions").where("id", id).first();
+      const { id } = getTransactionParamsSchema.parse(request.params);
 
-    return {
-      transaction,
-    };
-  });
+      const { sessionId } = request.cookies;
 
-  app.get("/summary", async () => {
-    //aqui lista o resumo do amount
-    const summary = await database("transactions")
-      .sum("amount", { as: "amount" })
-      .first();
+      const transaction = await database("transactions")
+        .where({
+          session_id: sessionId,
+          id,
+        })
+        .first();
 
-    return { summary };
-  });
+      return {
+        transaction,
+      };
+    }
+  );
+
+  app.get(
+    "/summary",
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request) => {
+      const { sessionId } = request.cookies;
+
+      //aqui lista o resumo do amount
+      const summary = await database("transactions")
+        .where("session_id", sessionId)
+        .sum("amount", { as: "amount" })
+        .first();
+
+      return { summary };
+    }
+  );
 
   app.post("/", async (request, reply) => {
     const createTransactionBodySchema = z.object({
