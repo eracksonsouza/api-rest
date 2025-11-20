@@ -1,0 +1,14 @@
+#RF
+✔ O usuario deve poder criar uma nova transaçao; @done (20/11/2025, 11:44:16)
+✔ O usuario deve poder obter um resumo da sua conta; @done (20/11/2025, 11:50:22)
+✔ O usuario deve poder listar todas as transaçoes que ja ocorreram @done (20/11/2025, 11:44:28)
+✔ O usuario deve poder visualizar uma transaçao unica @done (20/11/2025, 11:44:34)
+
+#RN
+
+✔ A transaçao pode ser do tipo credito que somara ao valor total, ou debito @done (20/11/2025, 11:44:39)
+☐ Deve ser possivel indetificarmos o usuario entre as requisiçoes
+☐ O usuario so pode visualizar transaçoes dele mesmo
+
+#RNF
+
