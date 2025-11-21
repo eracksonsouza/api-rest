@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "knex": "node --import tsx ./node_modules/.bin/knex",
-    "prettier": "prettier --write --fix"
+    "prettier": "prettier --write --fix",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +17,13 @@
     "@rocketseat/eslint-config": "^2.2.2",
     "@types/knex": "^0.15.2",
     "@types/node": "^24.10.1",
+    "@types/supertest": "^6.0.3",
     "eslint": "^8.57.1",
     "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.12"
   },
   "dependencies": {
     "3": "^2.1.0",
